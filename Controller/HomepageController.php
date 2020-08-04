@@ -4,15 +4,23 @@ declare(strict_types = 1);
 class HomepageController
 {
     //render function with both $_GET and $_POST vars available if it would be needed.
-    public function render(array $GET, array $POST)
+    public function render()
     {
-        //this is just example code, you can remove the line below
-        $user = new User('John Smith');
+        $pdo = new DatabaseManager();
 
-        //you should not echo anything inside your controller - only assign vars here
-        // then the view will actually display them.
+        if (!empty($_POST['products']) && !empty($_POST['customers'])) {
 
-        //load the view
+            $product = $pdo->findProductById((int)$_POST['products']);
+            $customer = $pdo->findCustomerById((int)$_POST['customers']);
+            $customerGroup = $pdo->findCustomerGroupById($customer->getGroupId());
+            $customerGroup->setFamily($pdo);
+            $customerGroup->setDiscountsFamily();
+            $price = $product->getBestPrice($customerGroup, $customer);
+            var_dump($price);
+
+
+        }
+
         require 'View/view.php';
     }
 }

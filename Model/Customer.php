@@ -54,6 +54,7 @@ class Customer{
 
     public function getDiscount(): int
     {
+
         if($this->getFixedDiscount()===0){
             $this->fixed=false;
             return $this->getVarDiscount();

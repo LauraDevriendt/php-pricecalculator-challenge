@@ -37,6 +37,7 @@ Anything complex should be calculated in the model -->
                 <button type="submit" name='submit' class="btn btn-primary mb-2">Submit</button>
             </div>
         </form>
+        <h5>Best price is <?php  if (!empty($_POST['products']) && !empty($_POST['customers'])) echo "$price"; //@todo doesn't show price as it should be?></h5>
     </div>
 </section>
 <?php require 'includes/footer.php'?>

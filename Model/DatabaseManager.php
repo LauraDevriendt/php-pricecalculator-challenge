@@ -98,8 +98,8 @@ class DatabaseManager{
 
     public function findCustomerGroupById(int $id):CustomerGroup{
         foreach ($this->getCustomerGroups() as $customerGroup){
-            if($id===$customerGroup->){
-                return $customer;
+            if($id===$customerGroup->getId()){
+                return $customerGroup;
             }
         }
     }
