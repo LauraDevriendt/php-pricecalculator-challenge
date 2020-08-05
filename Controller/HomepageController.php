@@ -15,12 +15,12 @@ class HomepageController
             $customerGroup = $pdo->findCustomerGroupById($customer->getGroupId());
             $customerGroup->setFamily($pdo);
             $customerGroup->setDiscountsFamily();
-            $price = $product->getBestPrice($customerGroup, $customer);
-            var_dump($price);
+            $bestPrice = $product->getBestPrice($customerGroup, $customer);
+            var_dump($bestPrice);
 
 
         }
 
-        require 'View/view.php';
+        require 'View/homepageView.php';
     }
 }

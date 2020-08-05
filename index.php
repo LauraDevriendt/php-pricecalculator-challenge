@@ -13,6 +13,7 @@ require 'Model/DatabaseManager.php';
 //include all your controllers here
 require 'resources/secret.php';
 require 'Controller/HomepageController.php';
+require 'Controller/LoginController.php';
 
 
 //if(isset($_GET['page'])) { // Don't have other file at the moment otherwise use if or switch

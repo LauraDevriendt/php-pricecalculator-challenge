@@ -10,5 +10,5 @@
 </head>
 <body>
     <header>
-        <h1>Price calculator</h1>
+
     </header>

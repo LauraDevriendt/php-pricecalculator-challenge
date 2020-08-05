@@ -21,6 +21,14 @@ class CustomerGroup
         $this->fixedDiscount = $fixedDiscount;
         $this->varDiscount = $varDiscount;
     }
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
 
     public function getFixedDiscount(): int
     {
@@ -73,7 +81,7 @@ class CustomerGroup
     }
 
 
-    //@todo duplicated from customer??
+    //@todo VRAAG KOEN duplicated from customer??
 
     public function isFixed(): bool
     {
