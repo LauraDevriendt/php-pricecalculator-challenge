@@ -131,6 +131,11 @@
                     </td>
 
                 </tr>
+                <tr>
+                    <th>Combination:</th>
+                <tr></tr>tr
+                </tr>
+
                 </tbody>
             </table>
         </div>
