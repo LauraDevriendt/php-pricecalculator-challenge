@@ -38,33 +38,15 @@ class Product{
     }
 
     public function getBestPrice(CustomerGroup $customerGroup, Customer $customer):float{
-        $customerDiscount= $customer->getDiscount()->getValue();
-        $customerMethod= $customer->getDiscount()->getType();
+        $priceCalculator= new PriceCalculator($customer,$this,$customerGroup);
+         return $priceCalculator->getBestprice();
 
-        $groupBestDiscount = $this->getBestGroupDiscount($customerGroup);
-        $groupDiscount= $groupBestDiscount->getValue();
-        $groupMethod= $groupBestDiscount->getType();
-        $price=0;
+    }
 
-        if($customerMethod===Discount::PERCENTAGE_TYPE && $groupMethod=== Discount::PERCENTAGE_TYPE){
-            if($customerDiscount<$groupDiscount){
-                $price= $groupBestDiscount->apply($price);
-            } else{
-                $price= $customer->getDiscount()->apply($price);
-            }
-        }
+    public function getBestPriceDisplay(CustomerGroup $customerGroup, Customer $customer):string{
+        $priceCalculator= new PriceCalculator($customer,$this,$customerGroup);
+        return $priceCalculator->getCalculationDisplay();
 
-        if($customerMethod===Discount::FIXED_TYPE && $groupMethod===Discount::PERCENTAGE_TYPE) {
-            $price=($this->getPrice()/100-$customerDiscount)*(1-$groupDiscount/100);
-        }
-        if($customerMethod===Discount::PERCENTAGE_TYPE && $groupMethod===Discount::FIXED_TYPE) {
-            $price=($this->getPrice()/100-$groupDiscount)*(1-$customerDiscount/100);
-        }
-        if($customerMethod===Discount::PERCENTAGE_TYPE &&$groupMethod===Discount::PERCENTAGE_TYPE) {
-            $price=($this->getPrice()/100-($groupDiscount+$customerDiscount));
-        }
-
-        return $price;
     }
 
 

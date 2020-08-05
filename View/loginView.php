@@ -16,7 +16,7 @@
             <input type="password" name="password" class="form-control" id="inlineFormInputGroupUsername2" placeholder="password">
         </div>
 
-        <button type="submit" class="btn btn-primary mb-2">Submit</button>
+        <button name="submitLogin" type="submit" class="btn btn-primary mb-2">Submit</button>
     </form>
 
 </section>

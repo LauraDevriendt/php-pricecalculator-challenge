@@ -34,15 +34,16 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <button type="submit" name='submit' class="btn btn-primary mb-2">Submit</button>
+                    <button type="submit" name='submitPriceSearch' class="btn btn-primary mb-2">Submit</button>
                 </div>
             </form>
             <h5 class="my-5">Best price
-                is <?php if (!empty($_POST['products']) && !empty($_POST['customers'])) echo $bestPrice; ?></h5>
+                is <?php if (!empty($_POST['products']) && !empty($_POST['customers'])) echo "$bestPrice euro"; ?></h5>
         </div>
     </section>
 
-<?php if (!empty($_POST['products']) && !empty($_POST['customers'])) :?>
+<?php if (!empty($_POST['products']) && !empty($_POST['customers']))  :?>
+
     <section id="detailedTables" class="my-5 container">
         <div id="customerTableSection">
             <h2>Details of calculation</h2>
@@ -71,20 +72,18 @@
                     /** @var Customer $customer */
                     ?>
                     <td><?php echo "{$customer->getFirstName()} - {$customer->getLastName()}"?></td>
-                    <td scope="row"><?php echo $customer->getDiscount()->getValue()  ?></td>
+                    <td scope="row"><?php echo ($customer->getDiscount()->getType()!==Discount::PERCENTAGE_TYPE)? "{$customer->getDiscount()->getValue()} %":0;  ?></td>
                     <td>
                         <?php
-                        $price=$product->getPrice()/ 100;
-                        $priceVarCustomer=$price*(1 - ($customer->getDiscount()->getValue()  / 100));
-                        echo "$price * (1 - ({$customer->getDiscount()->getValue() } / 100)) = $priceVarCustomer"
+                        $priceVarCustomer=$customer->getDiscount()->apply($product->getPrice());
+                        echo "$price * (1 - {$customer->getDiscount()->getValue() }%) = $priceVarCustomer euro"
                         ?>
                     </td>
-                    <td><?php echo $customer->getDiscount()->getValue(); ?></td>
+                    <td><?php echo ($customer->getDiscount()->getType()!==Discount::FIXED_TYPE)? "{$customer->getDiscount()->getValue()} euro":0;  ?></td>
                     <td>
                         <?php
-                        $price=$product->getPrice()/ 100;
-                        $priceFixedCustomer=$price- $customer->getDiscount()->getValue() ;
-                        echo "$price - {$customer->getDiscount()->getValue()} = $priceFixedCustomer" ?></td>
+                        $priceFixedCustomer=$customer->getDiscount()->apply($product->getPrice());
+                        echo "$price - {$customer->getDiscount()->getValue()} = $priceFixedCustomer euro" ?></td>
 
 
                 </tr>
@@ -104,30 +103,28 @@
                     <td scope="row">
                         <?php
                         foreach ($customerGroup->getFamily() as $group) {
-                            echo "{$group->getDiscount()->getValue()}<br>";
+                            echo ($group->getDiscount()->getType()!==Discount::PERCENTAGE_TYPE)? "{$group->getDiscount()->getValue()} %<br>":"0<br>";
                         }
                         ?>
                     </td>
                     <td>
                         <?php
                         foreach ($customerGroup->getFamily() as $group) {
-                            $price=$product->getPrice()/ 100;
-                            $priceVarGroup = $price * (1 - ($group->getDiscount()->getValue()/ 100));
-                            echo "$price * (1 - ({$group->getDiscount()->getValue()} / 100) = $priceVarGroup<br>";
+                            $priceVarGroup = $group->getDiscount()->apply($product->getPrice());
+                            echo "$price * (1 - {$group->getDiscount()->getValue()}%) = $priceVarGroup euro<br>";
                         }
                         ?>
                     </td>
                     <td>
                         <?php foreach ($customerGroup->getFamily() as $group) {
-                            echo "{$group->getDiscount()->getValue()}<br>";
+                            echo ($group->getDiscount()->getType()!==Discount::FIXED_TYPE)? "{$group->getDiscount()->getValue()} euro<br>":"0<br>";
                         } ?>
                     </td>
                     <td>
                         <?php
                         foreach ($customerGroup->getFamily() as $group) {
-                            $price=$product->getPrice()/ 100;
-                            $priceFixedGroup = $price - $group->getDiscount()->getValue();
-                            echo "$price - {$group->getDiscount()->getValue()} = $priceFixedGroup<br>";
+                            $priceFixedGroup = $group->getDiscount()->apply($product->getPrice());
+                            echo "$price - {$group->getDiscount()->getValue()} = $priceFixedGroup euro <br>";
                         }
                         ?>
                     </td>
@@ -135,7 +132,17 @@
                 </tr>
                 <tr>
                     <th>Combination:</th>
-                <tr></tr>tr
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><?php  echo"$displayCalculation";?></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                 </tr>
 
                 </tbody>

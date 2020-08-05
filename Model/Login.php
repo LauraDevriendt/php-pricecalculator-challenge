@@ -1,6 +1,7 @@
 <?php
 class Login {
 
+
 public static function searchMatchInDatbase($pdo, $surname):void{
     $customer = $pdo->findCustomerByFirstName($surname);
     if ($customer === Null) {
@@ -10,6 +11,7 @@ public static function searchMatchInDatbase($pdo, $surname):void{
     }
 
     if ($customer->getLastName() === htmlspecialchars($_POST['password'])) {
+
         require 'View/homepageView.php';
 
     } else {
