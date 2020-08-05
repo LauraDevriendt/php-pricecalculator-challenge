@@ -4,20 +4,17 @@ class Customer{
     private string $firstName;
     private string $lastName;
     private int $groupId;
-    private int $fixedDiscount;
-    private int $varDiscount;
-    private bool $fixed;
 
-    public function __construct(int $id, string $firstName, string $lastName, int $groupId, int $fixedDiscount, int $varDiscount)
+    private Discount $discount;
+
+    public function __construct(int $id, string $firstName, string $lastName, int $groupId, Discount $discount)
     {
         $this->id = $id;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->groupId = $groupId;
-        $this->fixedDiscount = $fixedDiscount;
-        $this->varDiscount = $varDiscount;
+        $this->discount = $discount;
     }
-
 
     public function getId(): int
     {
@@ -40,33 +37,18 @@ class Customer{
 
     public function getFixedDiscount(): int
     {
-        return $this->fixedDiscount;
+        //@todo remove this method
+        return $this->getDiscount()->getType() === Discount::FIXED_TYPE ? $this->getDiscount()->getValue() : 0;
     }
 
     public function getVarDiscount(): int
     {
-        return $this->varDiscount;
+        //@todo remove this method
+        return $this->getDiscount()->getType() === Discount::PERCENTAGE_TYPE ? $this->getDiscount()->getValue() : 0;
     }
-    public function isFixed(): bool
+
+    public function getDiscount(): Discount
     {
-        return $this->fixed;
+        return $this->discount;
     }
-
-    public function getDiscount(): int
-    {
-
-        if($this->getFixedDiscount()===0){
-            $this->fixed=false;
-            return $this->getVarDiscount();
-        }else{
-            $this->fixed=true;
-            return $this->getFixedDiscount();
-        }
-
-    }
-
-
-
-
-
 }

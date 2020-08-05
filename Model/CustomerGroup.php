@@ -5,40 +5,35 @@ class CustomerGroup
     private int $id;
     private string $name;
     private int $parentId;
-    private int $fixedDiscount;
-    private int $varDiscount;
     private array $family;
-    private bool $fixed;
-    private int $maxVariableDiscount=0;
-    private int $sumFixedDiscount=0;
 
+    private ?Discount $maxVariableDiscount = null;
+    private ?Discount $sumFixedDiscount = null;
+    private Discount $discount;
 
-    public function __construct(int $id, string $name, int $parentId, int $fixedDiscount, int $varDiscount)
+    public function __construct(int $id, string $name, int $parentId, Discount $discount)
     {
         $this->id = $id;
         $this->name = $name;
         $this->parentId = $parentId;
-        $this->fixedDiscount = $fixedDiscount;
-        $this->varDiscount = $varDiscount;
+        $this->discount = $discount;
     }
-    /**
-     * @return string
-     */
+
     public function getName(): string
     {
         return $this->name;
     }
 
-
     public function getFixedDiscount(): int
     {
-        return $this->fixedDiscount;
+        //@todo remove this method
+        return $this->getDiscount()->getType() === Discount::FIXED_TYPE ? $this->getDiscount()->getValue() : 0;
     }
-
 
     public function getVarDiscount(): int
     {
-        return $this->varDiscount;
+        //@todo remove this method
+        return $this->getDiscount()->getType() === Discount::PERCENTAGE_TYPE ? $this->getDiscount()->getValue() : 0;
     }
 
     public function getId(): int
@@ -61,7 +56,6 @@ class CustomerGroup
 
     public function setFamily(DatabaseManager $pdo)
     {
-
         $this->family[] = $this;
         $customerGroupId = $this->getParentId();
         while ($customerGroupId !== 0) {
@@ -70,52 +64,45 @@ class CustomerGroup
             $customerGroupId = $customerGroup->getParentId();
         }
     }
-    public function getMaxVariableDiscount(): int
+    public function getMaxVariableDiscount(): Discount
     {
+        if($this->maxVariableDiscount === null) { //lazy loading
+            $this->calculateDiscountsFamily();
+        }
+
         return $this->maxVariableDiscount;
     }
 
-    public function getSumFixedDiscount(): int
+    public function getSumFixedDiscount(): Discount
     {
+        if(is_null($this->sumFixedDiscount)) {
+            $this->calculateDiscountsFamily();
+        }
+
         return $this->sumFixedDiscount;
     }
 
-
-    //@todo VRAAG KOEN duplicated from customer??
-
-    public function isFixed(): bool
+    public function getDiscount(): Discount
     {
-        return $this->fixed;
+        return $this->discount;
     }
 
-    public function getDiscount(): int
+    private function calculateDiscountsFamily() : void
     {
-        if ($this->getFixedDiscount() === 0) {
-            $this->fixed = false;
-            return $this->getVarDiscount();
-        } else {
-            $this->fixed = true;
-            return $this->getFixedDiscount();
-        }
+        $this->maxVariableDiscount = new Discount(null, 0);
 
-    }
-
-    public function setDiscountsFamily()
-    {
-
+        $sumFixedDiscount = 0;
         foreach ($this->getFamily() as $member) {
             $discount=$member->getDiscount(); // also important to initiate  fixed bool
-            if ($member->isFixed() === false) {
+            if ($discount->getType() === Discount::PERCENTAGE_TYPE) {
                 if($this->maxVariableDiscount<$discount){
-                $this->maxVariableDiscount = $discount;
+                    $this->maxVariableDiscount = $discount;
                 }
             } else {
-                $this->sumFixedDiscount += $member->getDiscount();
+                $sumFixedDiscount += $member->getDiscount()->getValue();
             }
-
         }
+
+        $this->sumFixedDiscount = new Discount($sumFixedDiscount, null);
     }
-
-
-
 }

@@ -5,6 +5,7 @@ ini_set('display_startup_errors', "1");
 error_reporting(E_ALL);
 
 //include all your model files here
+require 'Model/Discount.php';
 require 'Model/Product.php';
 require 'Model/Customer.php';
 require 'Model/CustomerGroup.php';

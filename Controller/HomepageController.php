@@ -14,7 +14,6 @@ class HomepageController
             $customer = $pdo->findCustomerById((int)$_POST['customers']);
             $customerGroup = $pdo->findCustomerGroupById($customer->getGroupId());
             $customerGroup->setFamily($pdo);
-            $customerGroup->setDiscountsFamily();
             $bestPrice = $product->getBestPrice($customerGroup, $customer);
             var_dump($bestPrice);
 

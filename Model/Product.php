@@ -27,55 +27,43 @@ class Product{
         return $this->name;
     }
 
-    public function getBestGroupDiscount(CustomerGroup $customerGroup):array{
-        $fixedPrice=$this->getPrice()/100-$customerGroup->getSumFixedDiscount();
-        $variablePrice= $this->getPrice()/100*(1-$customerGroup->getMaxVariableDiscount()/100);
-        if($fixedPrice<$variablePrice){
-            return ["discount"=>$customerGroup->getSumFixedDiscount(),"method"=>'fixed'];
-        }else{
-            return ["discount"=>$customerGroup->getMaxVariableDiscount(),"method"=>'variable'];
+    public function getBestGroupDiscount(CustomerGroup $customerGroup):Discount{
+        $fixedPrice=$customerGroup->getSumFixedDiscount()->apply($this->getPrice());
+        $variablePrice = $customerGroup->getMaxVariableDiscount()->apply($this->getPrice());
+        if($fixedPrice < $variablePrice){
+            return $customerGroup->getSumFixedDiscount();
         }
 
-
-    }
-
-    public function getBestCustomerDiscount(Customer $customer):array{
-        $fixedPrice=$this->getPrice()/100-$customer->getFixedDiscount();
-        $variablePrice= $this->getPrice()/100*(1-$customer->getVarDiscount()/100);
-        if($fixedPrice<$variablePrice){
-            return ["discount"=>$customer->getFixedDiscount(), "method"=> 'fixed'];
-        }else{
-            return ["discount"=>$customer->getVarDiscount(),"method"=>'variable'];
-        }
-
+        return $customerGroup->getMaxVariableDiscount();
     }
 
     public function getBestPrice(CustomerGroup $customerGroup, Customer $customer):float{
-       $customerDiscount= $this->getBestCustomerDiscount($customer)['discount'];
-       $customerMethod= $this->getBestCustomerDiscount($customer)['method'];
-        $groupDiscount= $this->getBestGroupDiscount($customerGroup)['discount'];
-        $groupMethod= $this->getBestGroupDiscount($customerGroup)['method'];
+        $customerDiscount= $customer->getDiscount()->getValue();
+        $customerMethod= $customer->getDiscount()->getType();
+
+        $groupBestDiscount = $this->getBestGroupDiscount($customerGroup);
+        $groupDiscount= $groupBestDiscount->getValue();
+        $groupMethod= $groupBestDiscount->getType();
         $price=0;
 
-        if($customerMethod==='variable' && $groupMethod==='variable'){
+        if($customerMethod===Discount::PERCENTAGE_TYPE && $groupMethod=== Discount::PERCENTAGE_TYPE){
             if($customerDiscount<$groupDiscount){
-                $price= ($this->getPrice()/100)*(1-$groupDiscount/100);
+                $price= $groupBestDiscount->apply($price);
             } else{
-                $price= ($this->getPrice()/100)*(1-$customerDiscount/100);
+                $price= $customer->getDiscount()->apply($price);
             }
         }
-        if($customerMethod==='fixed' && $groupMethod==='variable') {
-        $price=($this->getPrice()/100-$customerDiscount)*(1-$groupDiscount/100);
+        //@todo: could refactor it below to use Discount methods
+        if($customerMethod===Discount::FIXED_TYPE && $groupMethod===Discount::PERCENTAGE_TYPE) {
+            $price=($this->getPrice()/100-$customerDiscount)*(1-$groupDiscount/100);
         }
-        if($customerMethod==='variable' && $groupMethod==='fixed') {
+        if($customerMethod===Discount::PERCENTAGE_TYPE && $groupMethod===Discount::FIXED_TYPE) {
             $price=($this->getPrice()/100-$groupDiscount)*(1-$customerDiscount/100);
         }
-        if($customerMethod==='variable' &&$groupMethod==='variable') {
+        if($customerMethod===Discount::PERCENTAGE_TYPE &&$groupMethod===Discount::PERCENTAGE_TYPE) {
             $price=($this->getPrice()/100-($groupDiscount+$customerDiscount));
         }
-        if($price<0){
-            $price=0;
-        }
+
         return $price;
     }
 

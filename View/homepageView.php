@@ -68,6 +68,9 @@
                     <td></td>
                 </tr>
                 <tr>
+                    <?php
+                    /** @var Customer $customer */
+                    ?>
                     <td><?php echo "{$customer->getFirstName()} - {$customer->getLastName()}"?></td>
                     <td scope="row"><?php echo $customer->getVarDiscount() ?></td>
                     <td>

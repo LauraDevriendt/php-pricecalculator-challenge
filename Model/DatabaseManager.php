@@ -14,9 +14,9 @@ class DatabaseManager
     {
         // No bugs in this function, just use the right credentials.
             $dbhost = "localhost";
-            $dbuser = "becode";
+            $dbuser = "root";
             $dbpass = PASS;
-            $db = "pricecalculator_db";
+            $db = "pricecalculator";
 
             $driverOptions = [
                 PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'",
@@ -74,7 +74,7 @@ class DatabaseManager
         $handle->execute();
         $customers = $handle->fetchAll();
         foreach ($customers as $customerData) {
-            $customer = new Customer($customerData['id'], $customerData['firstname'], $customerData['lastname'], $customerData['group_id'], (int)$customerData['fixed_discount'], (int)$customerData['variable_discount']);
+            $customer = new Customer($customerData['id'], $customerData['firstname'], $customerData['lastname'], $customerData['group_id'], new Discount($customerData['fixed_discount'], (int)$customerData['variable_discount']));
             $this->customers[] = $customer;
         }
     }
@@ -85,7 +85,7 @@ class DatabaseManager
         $handle->execute();
         $customerGroups = $handle->fetchAll();
         foreach ($customerGroups as $customerGroupData) {
-            $customerGroup = new CustomerGroup($customerGroupData['id'], $customerGroupData['name'], (int)$customerGroupData['parent_id'], (int)$customerGroupData['fixed_discount'], (int)$customerGroupData['variable_discount']);
+            $customerGroup = new CustomerGroup($customerGroupData['id'], $customerGroupData['name'], (int)$customerGroupData['parent_id'], new Discount((int)$customerGroupData['fixed_discount'], (int)$customerGroupData['variable_discount']));
             $this->customerGroups[] = $customerGroup;
         }
     }
