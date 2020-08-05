@@ -53,7 +53,7 @@ class Product{
                 $price= $customer->getDiscount()->apply($price);
             }
         }
-        //@todo: could refactor it below to use Discount methods
+
         if($customerMethod===Discount::FIXED_TYPE && $groupMethod===Discount::PERCENTAGE_TYPE) {
             $price=($this->getPrice()/100-$customerDiscount)*(1-$groupDiscount/100);
         }

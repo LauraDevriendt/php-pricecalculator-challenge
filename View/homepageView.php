@@ -46,7 +46,6 @@
     <section id="detailedTables" class="my-5 container">
         <div id="customerTableSection">
             <h2>Details of calculation</h2>
-            <!--@todo VRAAG KOEN SCHENDING VIEW REGELING & hoe enkel tonen als forum gespost-->
             <table class="table">
                 <thead class="thead-light">
                 <tr>
@@ -72,20 +71,20 @@
                     /** @var Customer $customer */
                     ?>
                     <td><?php echo "{$customer->getFirstName()} - {$customer->getLastName()}"?></td>
-                    <td scope="row"><?php echo $customer->getVarDiscount() ?></td>
+                    <td scope="row"><?php echo $customer->getDiscount()->getValue()  ?></td>
                     <td>
                         <?php
                         $price=$product->getPrice()/ 100;
-                        $priceVarCustomer=$price*(1 - ($customer->getVarDiscount() / 100));
-                        echo "$price * (1 - ({$customer->getVarDiscount()} / 100)) = $priceVarCustomer"
+                        $priceVarCustomer=$price*(1 - ($customer->getDiscount()->getValue()  / 100));
+                        echo "$price * (1 - ({$customer->getDiscount()->getValue() } / 100)) = $priceVarCustomer"
                         ?>
                     </td>
-                    <td><?php echo $customer->getFixedDiscount() ?></td>
+                    <td><?php echo $customer->getDiscount()->getValue(); ?></td>
                     <td>
                         <?php
                         $price=$product->getPrice()/ 100;
-                        $priceFixedCustomer=$price-$customer->getFixedDiscount();
-                        echo "$price - {$customer->getFixedDiscount()} = $priceFixedCustomer" ?></td>
+                        $priceFixedCustomer=$price- $customer->getDiscount()->getValue() ;
+                        echo "$price - {$customer->getDiscount()->getValue()} = $priceFixedCustomer" ?></td>
 
 
                 </tr>
@@ -105,7 +104,7 @@
                     <td scope="row">
                         <?php
                         foreach ($customerGroup->getFamily() as $group) {
-                            echo "{$group->getVarDiscount()}<br>";
+                            echo "{$group->getDiscount()->getValue()}<br>";
                         }
                         ?>
                     </td>
@@ -113,22 +112,22 @@
                         <?php
                         foreach ($customerGroup->getFamily() as $group) {
                             $price=$product->getPrice()/ 100;
-                            $priceVarGroup = $price * (1 - ($group->getVarDiscount() / 100));
-                            echo "$price * (1 - ({$group->getVarDiscount()} / 100) = $priceVarGroup<br>";
+                            $priceVarGroup = $price * (1 - ($group->getDiscount()->getValue()/ 100));
+                            echo "$price * (1 - ({$group->getDiscount()->getValue()} / 100) = $priceVarGroup<br>";
                         }
                         ?>
                     </td>
                     <td>
                         <?php foreach ($customerGroup->getFamily() as $group) {
-                            echo "{$group->getFixedDiscount()}<br>";
+                            echo "{$group->getDiscount()->getValue()}<br>";
                         } ?>
                     </td>
                     <td>
                         <?php
                         foreach ($customerGroup->getFamily() as $group) {
                             $price=$product->getPrice()/ 100;
-                            $priceFixedGroup = $price - $group->getFixedDiscount();
-                            echo "$price - {$group->getFixedDiscount()} = $priceFixedGroup<br>";
+                            $priceFixedGroup = $price - $group->getDiscount()->getValue();
+                            echo "$price - {$group->getDiscount()->getValue()} = $priceFixedGroup<br>";
                         }
                         ?>
                     </td>

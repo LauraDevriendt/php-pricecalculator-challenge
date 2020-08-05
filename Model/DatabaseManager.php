@@ -14,9 +14,9 @@ class DatabaseManager
     {
         // No bugs in this function, just use the right credentials.
             $dbhost = "localhost";
-            $dbuser = "root";
+            $dbuser = "becode";
             $dbpass = PASS;
-            $db = "pricecalculator";
+            $db = "pricecalculator_db";
 
             $driverOptions = [
                 PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'",

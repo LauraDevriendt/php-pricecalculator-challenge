@@ -35,18 +35,6 @@ class Customer{
         return $this->groupId;
     }
 
-    public function getFixedDiscount(): int
-    {
-        //@todo remove this method
-        return $this->getDiscount()->getType() === Discount::FIXED_TYPE ? $this->getDiscount()->getValue() : 0;
-    }
-
-    public function getVarDiscount(): int
-    {
-        //@todo remove this method
-        return $this->getDiscount()->getType() === Discount::PERCENTAGE_TYPE ? $this->getDiscount()->getValue() : 0;
-    }
-
     public function getDiscount(): Discount
     {
         return $this->discount;
