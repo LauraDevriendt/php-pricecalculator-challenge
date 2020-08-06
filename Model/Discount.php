@@ -37,7 +37,7 @@ class Discount //immutable
     {
         $price /= 100;
         if($this->type === self::FIXED_TYPE) {
-            return max(0,$price - $this->value);
+            return round(max(0,$price - $this->value),2);
         }
 
         return round($price * (1-$this->value/100), 2);

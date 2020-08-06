@@ -22,7 +22,7 @@ class DatabaseManager
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             ];
 
-            $this->dbController = new PDO('mysql:host=' . $dbhost . ';dbname=' . $db, $dbuser, $dbpass, $driverOptions);;
+            $this->dbController = new PDO('mysql:host=' . $dbhost . ';dbname=' . $db, $dbuser, $dbpass, $driverOptions);
             $this->fetchProductData();
             $this->fetchCustomerData();
             $this->fetchCustomerGroupData();

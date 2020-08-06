@@ -2,44 +2,45 @@
     <!-- this is the view, try to put only simple² if's and loops here.
     Anything complex should be calculated in the model -->
     <section class="container">
-        <h1 class="my-3">Price calculator</h1>
-        <div class="my-3">
-            <h4>FORM</h4>
-            <form method="post">
-                <div class="form-group">
-                    <label for="products"> Choose Product: </label>
-                    <select name="products" id="products">
-                        <?php
-                        $products = $pdo->getProducts();
-                        /**
-                         * @var Product[] $products
-                         */
-                        foreach ($products as $productSelect) {
-                            $priceTest = $productSelect->getPrice() / 100;
-                            echo "<option value='{$productSelect->getId()}'>{$productSelect->getName()}: {$priceTest} euro</option>";
-                        } ?>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="customers">Choose Customer:</label>
-                    <select name="customers" id="customers">
-                        <?php
-                        $customers = $pdo->getCustomers();
-                        /**
-                         * @var Customer[] $customers
-                         */
-                        foreach ($customers as $customerTest) {
-                            echo "<option value='{$customerTest->getId()}'>{$customerTest->getFirstName()}-{$customerTest->getLastName()}</option>";
-                        } ?>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <button type="submit" name='submitPriceSearch' class="btn btn-primary mb-2">Submit</button>
-                </div>
-            </form>
-            <h5 class="my-5">Best price
-                is <?php if (!empty($_POST['products']) && !empty($_POST['customers'])) echo "$bestPrice euro"; ?></h5>
+        <div class="row">
+            <h1 class="col-12 my-3">Price calculator</h1>
+            <div class="col-12 my-3">
+                <h4>FORM</h4>
+                <form method="post">
+                    <div class="form-group">
+                        <label for="products"> Choose Product: </label>
+                        <select name="products" id="products">
+                            <?php
+                            $products = $pdo->getProducts();
+                            /**
+                             * @var Product[] $products
+                             */
+                            foreach ($products as $productSelect) {
+                                $priceTest = $productSelect->getPrice() / 100;
+                                echo "<option value='{$productSelect->getId()}'>{$productSelect->getName()}: {$priceTest} euro</option>";
+                            } ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="customers">Welcome </label>
+                        <select name="customers" id="customers">
+                            <?php
+                            $user= unserialize($_SESSION['customer']);
+                            echo "<option value='{$user->getId()}'>{$user->getFirstName()}-{$user->getLastName()}</option>";
+                            ?>
+                        </select>
+                    </div>
+                    <div class="form-group d-flex">
+                        <button  type="submit" name='submitPriceSearch' class="btn btn-primary mr-1 mb-2">Submit</button>
+                        <button type="submit" name='Logout' class="btn btn-danger mb-2">Logout</button>
+                    </div>
+                </form>
+                <h5 class="my-5">Best price
+                    is <?php if (!empty($_POST['products']) && !empty($_POST['customers'])) echo "$bestPrice euro"; ?></h5>
+            </div>
+
         </div>
+
     </section>
 
 <?php if (!empty($_POST['products']) && !empty($_POST['customers']))  :?>

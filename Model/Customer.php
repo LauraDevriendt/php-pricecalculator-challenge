@@ -4,6 +4,7 @@ class Customer{
     private string $firstName;
     private string $lastName;
     private int $groupId;
+    private CustomerGroup $customerGroup;
 
     private Discount $discount;
 
@@ -14,6 +15,7 @@ class Customer{
         $this->lastName = $lastName;
         $this->groupId = $groupId;
         $this->discount = $discount;
+
     }
 
     public function getId(): int

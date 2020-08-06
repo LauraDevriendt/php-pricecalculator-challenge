@@ -11,7 +11,7 @@ public static function searchMatchInDatbase($pdo, $surname):void{
     }
 
     if ($customer->getLastName() === htmlspecialchars($_POST['password'])) {
-
+        $_SESSION['customer']=serialize($customer);
         require 'View/homepageView.php';
 
     } else {
