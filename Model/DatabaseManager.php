@@ -68,11 +68,29 @@ class DatabaseManager
 
     public function fetchCustomerData()
     {
-        $handle = $this->dbController->prepare('SELECT * FROM customer');
+        $handle = $this->dbController->prepare('SELECT customer.id as customer_id,
+firstname,
+lastname,
+group_id,
+customer.fixed_discount as customer_fixed_discount, 
+customer.variable_discount as customer_variable_discount,
+customer_group.name,
+customer_group.parent_id,
+customer_group.fixed_discount as group_fixed_discount,
+customer_group.variable_discount as group_variable_discount
+FROM customer 
+LEFT JOIN customer_group 
+ON customer.group_id =customer_group.id;
+');
         $handle->execute();
         $customers = $handle->fetchAll();
         foreach ($customers as $customerData) {
-            $customer = new Customer($customerData['id'], $customerData['firstname'], $customerData['lastname'], $customerData['group_id'], new Discount($customerData['fixed_discount'], (int)$customerData['variable_discount']));
+            $customer = new Customer(
+                $customerData['customer_id'], $customerData['firstname'],
+                $customerData['lastname'],
+                new Discount($customerData['customer_fixed_discount'], (int)$customerData['customer_variable_discount']),
+                new CustomerGroup($customerData['group_id'], $customerData['name'], (int)$customerData['parent_id'], new Discount($customerData['group_fixed_discount'], (int)$customerData['group_variable_discount']))
+            );
             $this->customers[] = $customer;
         }
     }

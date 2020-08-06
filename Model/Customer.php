@@ -3,18 +3,23 @@ class Customer{
     private int $id;
     private string $firstName;
     private string $lastName;
-    private int $groupId;
     private CustomerGroup $customerGroup;
+
+
+    public function getCustomerGroup(): CustomerGroup
+    {
+        return $this->customerGroup;
+    }
 
     private Discount $discount;
 
-    public function __construct(int $id, string $firstName, string $lastName, int $groupId, Discount $discount)
+    public function __construct(int $id, string $firstName, string $lastName, Discount $discount, CustomerGroup $customerGroup)
     {
         $this->id = $id;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
-        $this->groupId = $groupId;
         $this->discount = $discount;
+        $this->customerGroup=$customerGroup;
 
     }
 
@@ -32,10 +37,7 @@ class Customer{
     {
         return $this->lastName;
     }
-    public function getGroupId(): int
-    {
-        return $this->groupId;
-    }
+
 
     public function getDiscount(): Discount
     {
