@@ -61,7 +61,7 @@ class DatabaseManager
         $handle->execute();
         $products = $handle->fetchAll();
         foreach ($products as $product) {
-            $item = new Product($product['id'], $product['name'], $product['price']);
+            $item = new Product($product['id'], $product['name'], $product['price']/100);
             $this->products[] = $item;
         }
     }

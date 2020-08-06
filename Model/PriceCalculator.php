@@ -13,14 +13,14 @@ private string $calculationDisplay="";
         $groupBestDiscount = $product->getBestGroupDiscount($customerGroup);
         $groupDiscount= $groupBestDiscount->getValue();
         $groupMethod= $groupBestDiscount->getType();
-        $price=$product->getPrice()/100;
+        $price=$product->getPrice();
 
         if($customerMethod===Discount::PERCENTAGE_TYPE && $groupMethod=== Discount::PERCENTAGE_TYPE){
             if($customerDiscount<$groupDiscount){
-                $this->bestprice= round($groupBestDiscount->apply($this->bestprice),2);
+                $this->bestprice= round($groupBestDiscount->apply($price),2);
                 $this->calculationDisplay="$price * (1 - $groupDiscount %) = $this->bestprice euro";
             } else{
-                $this->bestprice= $customer->getDiscount()->apply($this->bestprice);
+                $this->bestprice= $customer->getDiscount()->apply($price);
                 $this->calculationDisplay="$price * ( 1 - $customerDiscount %) = $this->bestprice euro";
             }
         }
@@ -33,11 +33,14 @@ private string $calculationDisplay="";
             $this->bestprice=round(($price-$groupDiscount)*(1-$customerDiscount/100),2);
             $this->calculationDisplay="($price - $groupDiscount) * (1 - $customerDiscount%) = $this->bestprice euro";
         }
-        if($customerMethod===Discount::PERCENTAGE_TYPE &&$groupMethod===Discount::PERCENTAGE_TYPE) {
+        if($customerMethod===Discount::FIXED_TYPE &&$groupMethod===Discount::FIXED_TYPE) {
             $this->bestprice=round(($price-($groupDiscount+$customerDiscount)),2);
             $this->calculationDisplay="($price - ($groupDiscount + $customerDiscount) = $this->bestprice) euro";
         }
 
+        if($this->bestprice<0){
+            $this->bestprice=0;
+        }
 
 
     }

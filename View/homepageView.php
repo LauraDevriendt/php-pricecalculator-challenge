@@ -16,8 +16,8 @@
                              * @var Product[] $products
                              */
                             foreach ($products as $productSelect) {
-                                $priceTest = $productSelect->getPrice() / 100;
-                                echo "<option value='{$productSelect->getId()}'>{$productSelect->getName()}: {$priceTest} euro</option>";
+
+                                echo "<option value='{$productSelect->getId()}'>{$productSelect->getName()}: {$productSelect->getPrice()} euro</option>";
                             } ?>
                         </select>
                     </div>
@@ -52,8 +52,8 @@
                 <thead class="thead-light">
                 <tr>
                     <th><?php
-                        $price = $product->getPrice() / 100;
-                        echo "{$product->getName()}: {$price} euro" ?></th>
+
+                        echo "{$product->getName()}: {$product->getPrice()} euro" ?></th>
                     <th>Variabel Discount</th>
                     <th>Price minus Variable Discount</th>
                     <th>Fixed Discount</th>
@@ -78,7 +78,7 @@
                         <?php
                         $priceVarCustomer = $customer->getDiscount()->apply($product->getPrice());
                         if ($customer->getDiscount()->getType() === Discount::PERCENTAGE_TYPE) {
-                            echo "$price * (1 - {$customer->getDiscount()->getValue() }%) = $priceVarCustomer euro";
+                            echo "{$product->getPrice()} * (1 - {$customer->getDiscount()->getValue() }%) = $priceVarCustomer euro";
                         }
                         ?>
                     </td>
@@ -87,7 +87,7 @@
                         <?php
                         $priceFixedCustomer = $customer->getDiscount()->apply($product->getPrice());
                         if ($customer->getDiscount()->getType() === Discount::FIXED_TYPE) {
-                            echo "$price - {$customer->getDiscount()->getValue()} = $priceFixedCustomer euro";
+                            echo "{$product->getPrice()} - {$customer->getDiscount()->getValue()} = $priceFixedCustomer euro";
                         }
                         ?>
                     </td>
@@ -110,7 +110,7 @@
                     <td scope="row">
                         <?php
                         foreach ($customerGroup->getFamily() as $group) {
-                            echo ($group->getDiscount()->getType() === Discount::PERCENTAGE_TYPE) ? "{$group->getDiscount()->getValue()} %<br>" : "";
+                            echo ($group->getDiscount()->getType() === Discount::PERCENTAGE_TYPE) ? "{$group->getDiscount()->getValue()} %<br>" : "<br>";
                         }
                         ?>
                     </td>
@@ -119,14 +119,15 @@
                         foreach ($customerGroup->getFamily() as $group) {
                             if ($group->getDiscount()->getType() === Discount::PERCENTAGE_TYPE) {
                                 $priceVarGroup = $group->getDiscount()->apply($product->getPrice());
-                                echo "$price * (1 - {$group->getDiscount()->getValue()}%) = $priceVarGroup euro<br>";
+                                echo "{$product->getPrice()} * (1 - {$group->getDiscount()->getValue()}%) = $priceVarGroup euro";
                             }
+                            echo "<br>";
                         }
                         ?>
                     </td>
                     <td>
                         <?php foreach ($customerGroup->getFamily() as $group) {
-                            echo ($group->getDiscount()->getType() === Discount::FIXED_TYPE) ? "{$group->getDiscount()->getValue()} euro<br>" : "";
+                            echo ($group->getDiscount()->getType() === Discount::FIXED_TYPE) ? "{$group->getDiscount()->getValue()} euro<br>" : "<br>";
                         } ?>
                     </td>
                     <td>
@@ -134,8 +135,9 @@
                         foreach ($customerGroup->getFamily() as $group) {
                             if ($group->getDiscount()->getType() === Discount::FIXED_TYPE) {
                                 $priceFixedGroup = $group->getDiscount()->apply($product->getPrice());
-                                echo "$price - {$group->getDiscount()->getValue()} = $priceFixedGroup euro <br>";
+                                echo "{$product->getPrice()} - {$group->getDiscount()->getValue()} = $priceFixedGroup euro";
                             }
+                            echo  "<br>";
                         }
                         ?>
                     </td>
