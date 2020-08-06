@@ -4,14 +4,14 @@ class Customer{
     private string $firstName;
     private string $lastName;
     private CustomerGroup $customerGroup;
-
+    private Discount $discount;
 
     public function getCustomerGroup(): CustomerGroup
     {
         return $this->customerGroup;
     }
 
-    private Discount $discount;
+
 
     public function __construct(int $id, string $firstName, string $lastName, Discount $discount, CustomerGroup $customerGroup)
     {

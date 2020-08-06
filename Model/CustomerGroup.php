@@ -48,10 +48,12 @@ class CustomerGroup
         $this->family[] = $this;
         $customerGroupId = $this->getParentId();
         while ($customerGroupId !== 0) {
-            $customerGroup = $pdo->findCustomerGroupById($customerGroupId);
+            $customerGroup =$pdo->findCustomerGroupById($customerGroupId);
             $this->family[] = $customerGroup;
             $customerGroupId = $customerGroup->getParentId();
         }
+
+
     }
     public function getMaxVariableDiscount(): Discount
     {

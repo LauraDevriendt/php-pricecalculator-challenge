@@ -12,12 +12,12 @@ class HomepageController
 
             $product = $pdo->findProductById((int)$_POST['products']);
             $customer = $pdo->findCustomerById((int)$_POST['customers']);
-            $customerGroup = $pdo->findCustomerGroupById($customer->getCustomerGroup()->getId());
+            $customerGroup = $customer->getCustomerGroup();
             $customerGroup->setFamily($pdo);
             $bestPrice = $product->getBestPrice($customerGroup, $customer);
             $displayCalculation=$product->getBestPriceDisplay($customerGroup, $customer);
 
-            var_dump($customer);
+
 
         }
 

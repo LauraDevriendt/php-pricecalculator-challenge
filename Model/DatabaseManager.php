@@ -88,8 +88,8 @@ ON customer.group_id =customer_group.id;
             $customer = new Customer(
                 $customerData['customer_id'], $customerData['firstname'],
                 $customerData['lastname'],
-                new Discount($customerData['customer_fixed_discount'], (int)$customerData['customer_variable_discount']),
-                new CustomerGroup($customerData['group_id'], $customerData['name'], (int)$customerData['parent_id'], new Discount($customerData['group_fixed_discount'], (int)$customerData['group_variable_discount']))
+                new Discount($customerData['customer_fixed_discount'], $customerData['customer_variable_discount']),
+                new CustomerGroup($customerData['group_id'], $customerData['name'], (int)$customerData['parent_id'], new Discount($customerData['group_fixed_discount'], $customerData['group_variable_discount']))
             );
             $this->customers[] = $customer;
         }
@@ -101,10 +101,12 @@ ON customer.group_id =customer_group.id;
         $handle->execute();
         $customerGroups = $handle->fetchAll();
         foreach ($customerGroups as $customerGroupData) {
-            $customerGroup = new CustomerGroup($customerGroupData['id'], $customerGroupData['name'], (int)$customerGroupData['parent_id'], new Discount((int)$customerGroupData['fixed_discount'], (int)$customerGroupData['variable_discount']));
+            $customerGroup = new CustomerGroup($customerGroupData['id'], $customerGroupData['name'], (int)$customerGroupData['parent_id'], new Discount($customerGroupData['fixed_discount'], $customerGroupData['variable_discount']));
             $this->customerGroups[] = $customerGroup;
         }
+
     }
+
 
     public function findProductById(int $id): Product
     {
@@ -124,6 +126,16 @@ ON customer.group_id =customer_group.id;
         }
     }
 
+    public function findCustomerGroupById(int $id): CustomerGroup
+    {
+
+        foreach ($this->getCustomerGroups() as $customerGroup) {
+            if ($id === $customerGroup->getId()) {
+                return $customerGroup;
+            }
+        }
+    }
+
 
     public function findCustomerByFirstName(string $name):? Customer
     {
@@ -138,14 +150,7 @@ ON customer.group_id =customer_group.id;
 
 
 
-    public function findCustomerGroupById(int $id): CustomerGroup
-    {
-        foreach ($this->getCustomerGroups() as $customerGroup) {
-            if ($id === $customerGroup->getId()) {
-                return $customerGroup;
-            }
-        }
-    }
+
     public function createErrorMessage($message){
         return "<div class='alert alert-danger' role='alert'>
                                   <strong>Oh snap!</strong> $message</div>";
